@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack - Student Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1 class="login-title">EduTrack</h1>
+                    <p class="login-subtitle">Student Management System</p>
+                </div>
+                
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username">
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                        <i class="fas fa-lock input-icon"></i>
+                        <span class="toggle-password" onclick="togglePassword()">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+                
+                <div class="demo-section">
+                    <button class="demo-toggle-btn" onclick="toggleDemoCredentials()">
+                        <i class="fas fa-info-circle"></i> Show Demo Credentials
+                    </button>
+                    
+                    <div id="demo-credentials" class="demo-credentials" style="display: none;">
+                        <h4>Demo Login Credentials</h4>
+                        <div class="demo-roles">
+                            <div class="demo-role" onclick="fillCredentials('admin', 'admin123')">
+                                <h5><i class="fas fa-user-shield"></i> Admin</h5>
+                                <p><strong>Username:</strong> admin</p>
+                                <p><strong>Password:</strong> admin123</p>
+                            </div>
+                            <div class="demo-role" onclick="fillCredentials('faculty', 'faculty123')">
+                                <h5><i class="fas fa-chalkboard-teacher"></i> Faculty</h5>
+                                <p><strong>Username:</strong> faculty</p>
+                                <p><strong>Password:</strong> faculty123</p>
+                            </div>
+                            <div class="demo-role" onclick="fillCredentials('student', 'student123')">
+                                <h5><i class="fas fa-user-graduate"></i> Student</h5>
+                                <p><strong>Username:</strong> student</p>
+                                <p><strong>Password:</strong> student123</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="page">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1 class="header-title">EduTrack Admin</h1>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" id="global-search" placeholder="Search anything...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Admin User</span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <nav class="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="menu-item active" onclick="showSection('overview')">
+                        <i class="fas fa-home"></i> <span>Overview</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('students')">
+                        <i class="fas fa-user-graduate"></i> <span>Students</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('faculty')">
+                        <i class="fas fa-chalkboard-teacher"></i> <span>Faculty</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('courses')">
+                        <i class="fas fa-book"></i> <span>Courses</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('attendance')">
+                        <i class="fas fa-calendar-check"></i> <span>Attendance</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('grades')">
+                        <i class="fas fa-chart-line"></i> <span>Grades</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('fees')">
+                        <i class="fas fa-dollar-sign"></i> <span>Fees</span>
+                    </li>
+                    <li class="menu-item" onclick="showSection('analytics')">
+                        <i class="fas fa-chart-pie"></i> <span>Analytics</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <main class="main-content">
+                <!-- Overview Section -->
+                <section id="overview-section" class="content-section active">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="total-students">0</h3>
+                                <p class="stat-label">Total Students</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="total-faculty">0</h3>
+                                <p class="stat-label">Total Faculty</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="total-courses">0</h3>
+                                <p class="stat-label">Total Courses</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 class="stat-value" id="avg-attendance">0%</h3>
+                                <p class="stat-label">Avg Attendance</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="overview-chart"></canvas>
+                    </div>
+
+                    <div class="recent-activity">
+                        <h3>Recent Activities</h3>
+                        <div id="activity-list" class="activity-list">
+                            <!-- Activities will be populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Students Section -->
+                <section id="students-section" class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Student Management</h2>
+                        <button class="btn btn-primary" onclick="openAddStudentModal()">
+                            <i class="fas fa-plus"></i> Add Student
+                        </button>
+                    </div>
+
+                    <div class="filters-bar">
+                        <input type="text" id="student-search" placeholder="Search students..." class="search-input">
+                        <select id="class-filter" class="filter-select">
+                            <option value="">All Classes</option>
+                            <option value="Class 1">Class 1</option>
+                            <option value="Class 2">Class 2</option>
+                            <option value="Class 3">Class 3</option>
+                            <option value="Class 4">Class 4</option>
+                            <option value="Class 5">Class 5</option>
+                        </select>
+                        <select id="status-filter" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Graduated">Graduated</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="exportStudents()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="students-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody">
+                                <!-- Students will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Faculty Section -->
+                <section id="faculty-section" class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Faculty Management</h2>
+                        <button class="btn btn-primary" onclick="openAddFacultyModal()">
+                            <i class="fas fa-plus"></i> Add Faculty
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="faculty-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="faculty-tbody">
+                                <!-- Faculty will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Courses Section -->
+                <section id="courses-section" class="content-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Course Management</h2>
+                        <button class="btn btn-primary" onclick="openAddCourseModal()">
+                            <i class="fas fa-plus"></i> Add Course
+                        </button>
+                    </div>
+
+                    <div id="courses-grid" class="courses-grid">
+                        <!-- Courses will be populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Attendance Section -->
+                <section id="attendance-section" class="content-section">
+                    <h2 class="section-title">Attendance Management</h2>
+                    
+                    <div class="attendance-controls">
+                        <select id="attendance-class" class="filter-select">
+                            <option value="">Select Class</option>
+                            <option value="Class 1">Class 1</option>
+                            <option value="Class 2">Class 2</option>
+                            <option value="Class 3">Class 3</option>
+                        </select>
+                        <input type="date" id="attendance-date" class="date-input">
+                        <button class="btn btn-primary" onclick="loadAttendance()">
+                            <i class="fas fa-search"></i> Load
+                        </button>
+                    </div>
+
+                    <div id="attendance-list" class="attendance-list">
+                        <!-- Attendance will be populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Grades Section -->
+                <section id="grades-section" class="content-section">
+                    <h2 class="section-title">Grade Management</h2>
+                    
+                    <div class="table-container">
+                        <table id="grades-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Course</th>
+                                    <th>Grade</th>
+                                    <th>Percentage</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grades-tbody">
+                                <!-- Grades will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Fees Section -->
+                <section id="fees-section" class="content-section">
+                    <h2 class="section-title">Fee Management</h2>
+                    
+                    <div class="table-container">
+                        <table id="fees-table" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Amount</th>
+                                    <th>Paid</th>
+                                    <th>Balance</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fees-tbody">
+                                <!-- Fees will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Analytics Section -->
+                <section id="analytics-section" class="content-section">
+                    <h2 class="section-title">Analytics & Reports</h2>
+                    
+                    <div class="analytics-grid">
+                        <div class="chart-card">
+                            <h3>Student Performance</h3>
+                            <canvas id="performance-chart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Attendance Trends</h3>
+                            <canvas id="attendance-chart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Fee Collection</h3>
+                            <canvas id="fees-chart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Class Distribution</h3>
+                            <canvas id="distribution-chart"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Faculty Dashboard -->
+    <div id="faculty-dashboard" class="page">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1 class="header-title">EduTrack Faculty</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span class="user-name">Faculty User</span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <main class="main-content-full">
+                <h2 class="section-title">My Classes</h2>
+                <div id="faculty-classes" class="courses-grid">
+                    <!-- Classes will be populated by JS -->
+                </div>
+
+                <h2 class="section-title">Mark Attendance</h2>
+                <div id="faculty-attendance" class="attendance-list">
+                    <!-- Attendance marking interface -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="student-dashboard" class="page">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1 class="header-title">EduTrack Student</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span class="user-name">Student User</span>
+                    <button class="btn-logout" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <main class="main-content-full">
+                <div class="student-profile-card">
+                    <h2>My Profile</h2>
+                    <div id="student-profile-info">
+                        <!-- Profile info will be populated by JS -->
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>My Attendance</h3>
+                        <div class="stat-value" id="student-attendance">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Average Grade</h3>
+                        <div class="stat-value" id="student-grade">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Fees</h3>
+                        <div class="stat-value" id="student-fees">$0</div>
+                    </div>
+                </div>
+
+                <h2 class="section-title">My Grades</h2>
+                <div id="student-grades" class="table-container">
+                    <!-- Grades will be populated by JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

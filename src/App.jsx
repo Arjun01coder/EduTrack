@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Auth/Login';
-import AdminDashboard from './components/Dashboard/AdminDashboard';
-import FacultyDashboard from './components/Dashboard/FacultyDashboard';
-import StudentDashboard from './components/Dashboard/StudentDashboard';
+const AdminDashboard = lazy(() => import('./components/Dashboard/AdminDashboard'));
+const FacultyDashboard = lazy(() => import('./components/Dashboard/FacultyDashboard'));
+const StudentDashboard = lazy(() => import('./components/Dashboard/StudentDashboard'));
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -67,7 +67,9 @@ function App() {
           <NotificationProvider>
             <Router>
               <div className="App">
-                <AppRoutes />
+                <Suspense fallback={<div style={{padding:20}}>Loading...</div>}>
+                  <AppRoutes />
+                </Suspense>
               </div>
             </Router>
           </NotificationProvider>

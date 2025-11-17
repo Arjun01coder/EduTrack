@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const Modal = ({ title, children, onClose, size = 'medium', showHeader = true }) => {
   // Close modal on Escape key
@@ -18,6 +18,41 @@ const Modal = ({ title, children, onClose, size = 'medium', showHeader = true })
     };
   }, [onClose]);
 
+  // Focus management / focus trap
+  const modalRef = useRef(null);
+  useEffect(() => {
+    const node = modalRef.current;
+    if (!node) return;
+
+    // focus the modal for screen readers
+    node.focus();
+
+    const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusable = Array.from(node.querySelectorAll(focusableSelectors));
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    const handleTab = (e) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => document.removeEventListener('keydown', handleTab);
+  }, []);
+
   const getModalSizeClass = () => {
     switch (size) {
       case 'small': return 'modal-small';
@@ -29,7 +64,15 @@ const Modal = ({ title, children, onClose, size = 'medium', showHeader = true })
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className={`modal ${getModalSizeClass()}`} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`modal ${getModalSizeClass()}`}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        tabIndex={-1}
+        ref={modalRef}
+      >
         {showHeader && (
           <div className="modal-header">
             <h3 className="modal-title">{title}</h3>

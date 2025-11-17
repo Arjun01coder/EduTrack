@@ -23,6 +23,48 @@ export const DataProvider = ({ children }) => {
     initializeDemoData();
   }, []);
 
+  // Sync data across multiple tabs when localStorage changes
+  useEffect(() => {
+    const handleStorage = (e) => {
+      if (!e.key) {
+        // localStorage.clear() or similar - reinitialize
+        initializeDemoData();
+        return;
+      }
+
+      try {
+        switch (e.key) {
+          case 'edutrack_students':
+            setStudents(JSON.parse(e.newValue) || []);
+            break;
+          case 'edutrack_faculty':
+            setFaculty(JSON.parse(e.newValue) || []);
+            break;
+          case 'edutrack_courses':
+            setCourses(JSON.parse(e.newValue) || []);
+            break;
+          case 'edutrack_attendance':
+            setAttendance(JSON.parse(e.newValue) || []);
+            break;
+          case 'edutrack_grades':
+            setGrades(JSON.parse(e.newValue) || []);
+            break;
+          case 'edutrack_fees':
+            setFees(JSON.parse(e.newValue) || []);
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        // ignore malformed storage values
+        // console.warn('DataContext storage sync parse error', err);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const initializeDemoData = () => {
     // Demo Students
     const demoStudents = [

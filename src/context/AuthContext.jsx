@@ -57,6 +57,20 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
+  // Keep auth state in sync across tabs
+  useEffect(() => {
+    const handleStorage = (e) => {
+      if (e.key === 'edutrack_user') {
+        const newVal = e.newValue;
+        if (newVal) setUser(JSON.parse(newVal));
+        else setUser(null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
   const login = (username, password) => {
     // Find user in demo users
     const foundUser = Object.values(demoUsers).find(

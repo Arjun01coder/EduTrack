@@ -36,6 +36,8 @@ const StudentManagement = () => {
     guardianAddress: ''
   });
 
+  // original controlled form data handling is used
+
   const searchFields = ['name', 'studentId', 'email', 'phone', 'class', 'section'];
   const searchFilters = {
     status: ['Active', 'Inactive', 'Graduated'],
@@ -108,24 +110,23 @@ const StudentManagement = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
+  const handleSubmit = (data) => {
+    // data comes from react-hook-form
     if (editingStudent) {
       // Update existing student
       const updatedStudents = students.map(student => 
-        student.id === editingStudent.id ? { ...formData, id: editingStudent.id } : student
+        student.id === editingStudent.id ? { ...data, id: editingStudent.id } : student
       );
       updateStudents(updatedStudents);
       addNotification({
         type: 'success',
         title: 'Student Updated',
-        message: `${formData.name}'s information has been updated.`
+        message: `${data.name}'s information has been updated.`
       });
     } else {
       // Add new student
       const newStudent = {
-        ...formData,
+        ...data,
         id: Date.now(),
         studentId: `STU${String(students.length + 1).padStart(3, '0')}`
       };
@@ -133,7 +134,7 @@ const StudentManagement = () => {
       addNotification({
         type: 'success',
         title: 'Student Added',
-        message: `${formData.name} has been successfully enrolled.`
+        message: `${data.name} has been successfully enrolled.`
       });
     }
     

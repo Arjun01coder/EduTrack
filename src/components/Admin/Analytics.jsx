@@ -1,30 +1,19 @@
 import React from 'react';
 import { useData } from '../../context/DataContext';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement,
-} from 'chart.js';
-import { Bar, Pie, Line } from 'react-chartjs-2';
+import { Suspense, lazy } from 'react';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement
-);
+// Dynamically import chart components to reduce initial bundle size
+const LazyBar = lazy(() => import('react-chartjs-2').then(mod => ({ default: mod.Bar })));
+const LazyPie = lazy(() => import('react-chartjs-2').then(mod => ({ default: mod.Pie })));
+const LazyLine = lazy(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })));
+
+// Chart.js registration moved to dynamic import path to avoid loading on initial bundle
+import('chart.js').then((ChartJS) => {
+  const { CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement } = ChartJS;
+  ChartJS.Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement);
+}).catch(() => {
+  // ignore if dynamic import fails in tests or constrained env
+});
 
 const Analytics = () => {
   const { students, faculty, courses, fees, attendance, grades } = useData();
@@ -214,36 +203,46 @@ const Analytics = () => {
       <div className="charts-grid">
         <div className="chart-card">
           <h3>Students by Class</h3>
-          <div className="chart-container">
-            <Bar data={barData} options={chartOptions} />
-          </div>
+            <div className="chart-container">
+              <Suspense fallback={<div>Loading chart...</div>}>
+                <LazyBar data={barData} options={chartOptions} />
+              </Suspense>
+            </div>
         </div>
 
         <div className="chart-card">
           <h3>Fee Payment Status</h3>
           <div className="chart-container">
-            <Pie data={pieData} options={chartOptions} />
+            <Suspense fallback={<div>Loading chart...</div>}>
+              <LazyPie data={pieData} options={chartOptions} />
+            </Suspense>
           </div>
         </div>
 
         <div className="chart-card">
           <h3>Faculty by Department</h3>
           <div className="chart-container">
-            <Bar data={departmentData} options={chartOptions} />
+            <Suspense fallback={<div>Loading chart...</div>}>
+              <LazyBar data={departmentData} options={chartOptions} />
+            </Suspense>
           </div>
         </div>
 
         <div className="chart-card">
           <h3>Grade Distribution</h3>
           <div className="chart-container">
-            <Bar data={gradeData} options={chartOptions} />
+            <Suspense fallback={<div>Loading chart...</div>}>
+              <LazyBar data={gradeData} options={chartOptions} />
+            </Suspense>
           </div>
         </div>
 
         <div className="chart-card span-2">
           <h3>Attendance Trends</h3>
           <div className="chart-container">
-            <Line data={getAttendanceTrends()} options={chartOptions} />
+            <Suspense fallback={<div>Loading chart...</div>}>
+              <LazyLine data={getAttendanceTrends()} options={chartOptions} />
+            </Suspense>
           </div>
         </div>
       </div>

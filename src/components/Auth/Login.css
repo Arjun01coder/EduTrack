@@ -3,18 +3,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  top: -250px;
+  right: -250px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.7; }
 }
 
 .login-card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  padding: 40px;
+  background: rgba(30, 30, 46, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  padding: 48px;
   width: 100%;
-  max-width: 450px;
-  animation: slideUp 0.5s ease-out;
+  max-width: 480px;
+  animation: slideUp 0.6s ease-out;
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes slideUp {
@@ -34,14 +57,17 @@
 }
 
 .login-title {
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
-  color: #667eea;
-  margin-bottom: 5px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
 }
 
 .login-subtitle {
-  color: #666;
+  color: #a1a1aa;
   font-size: 16px;
   margin: 0;
 }
@@ -59,64 +85,76 @@
 }
 
 .demo-section {
-  border-top: 1px solid #eee;
-  padding-top: 20px;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  padding-top: 24px;
 }
 
 .demo-toggle-btn {
   width: 100%;
-  padding: 10px;
-  background: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  color: #666;
+  color: #e4e4e7;
   transition: all 0.3s ease;
 }
 
 .demo-toggle-btn:hover {
-  background: #e9ecef;
-  color: #333;
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #ffffff;
 }
 
 .demo-credentials {
-  margin-top: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
+  margin-top: 24px;
+  padding: 24px;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .demo-credentials h4 {
-  margin-bottom: 15px;
-  color: #333;
+  margin-bottom: 18px;
+  color: #e4e4e7;
   font-size: 16px;
+  font-weight: 600;
 }
 
 .demo-roles {
   display: grid;
-  gap: 15px;
+  gap: 16px;
 }
 
 .demo-role {
-  padding: 15px;
-  background: white;
-  border-radius: 6px;
-  border: 1px solid #ddd;
+  padding: 18px;
+  background: rgba(30, 30, 46, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  transition: all 0.3s ease;
+}
+
+.demo-role:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(30, 30, 46, 0.8);
+  transform: translateY(-2px);
 }
 
 .demo-role h5 {
-  margin-bottom: 8px;
-  color: #667eea;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 14px;
   font-weight: 600;
 }
 
 .demo-role p {
-  margin: 3px 0;
+  margin: 4px 0;
   font-size: 12px;
-  color: #666;
+  color: #a1a1aa;
   font-family: 'Courier New', monospace;
 }
 
